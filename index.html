@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Football Talent — Scout • Build • Develop • Win</title>
+<meta name="theme-color" content="#07152b">
+<style>
+:root{--bg:#061226;--panel:#0a1b35;--panel2:#0d2343;--line:#1b3a65;--text:#eef5ff;--muted:#8fa6c8;--blue:#1683ff;--green:#21d47b;--gold:#ffc857;--red:#ff5573}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 70% 0,#123567 0,#061226 38%,#030a16 100%);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:220px 1fr}
+.side{background:rgba(4,14,29,.94);border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:0;height:100vh}
+.brand{font-size:22px;font-weight:800;padding:6px 10px 22px;display:flex;gap:10px;align-items:center}.ball{font-size:30px}
+.nav button{width:100%;border:0;background:transparent;color:#c4d3e9;padding:12px 13px;margin:3px 0;border-radius:10px;text-align:left;font-weight:600}.nav button:hover,.nav button.active{background:linear-gradient(90deg,#1166d6,#1683ff);color:white}
+.main{min-width:0}.top{height:74px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 24px;background:rgba(3,12,26,.72);backdrop-filter:blur(12px);position:sticky;top:0;z-index:5}
+.search{flex:1;max-width:600px;background:#081a34;border:1px solid #21446f;border-radius:28px;padding:11px 18px;color:white;outline:none}.topStats{margin-left:auto;display:flex;gap:20px;align-items:center}.money{font-weight:800}.small{font-size:12px;color:var(--muted)}
+.globalSearchResults{position:absolute;top:62px;left:24px;width:min(600px,calc(100vw - 48px));background:#081a33;border:1px solid #2a527d;border-radius:12px;display:none;z-index:30;box-shadow:0 20px 50px #0009;max-height:420px;overflow:auto}.globalSearchResults.show{display:block}.searchResult{padding:10px 13px;border-bottom:1px solid #173858;cursor:pointer}.searchResult:hover{background:#0e2b4d}.searchResult b{display:block}.searchResult span{font-size:12px;color:#9db4d2}
+.content{padding:22px;max-width:1600px;margin:auto}.page{display:none}.page.active{display:block}
+.hero{min-height:270px;border:1px solid #1c4779;border-radius:18px;padding:30px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,rgba(13,49,94,.95),rgba(4,19,42,.9)),radial-gradient(circle at 90% 50%,#195ea8,transparent 45%);box-shadow:0 20px 60px #0007;overflow:hidden}.hero h1{font-size:38px;max-width:600px;margin:0 0 12px}.hero p{color:#a9bdd8;max-width:650px}.heroBall{font-size:150px;filter:drop-shadow(0 20px 20px #0008);transform:rotate(-12deg)}
+.btn{border:0;border-radius:10px;padding:11px 17px;background:linear-gradient(90deg,#0966d8,#1683ff);color:white;font-weight:800}.btn.green{background:linear-gradient(90deg,#079b59,#21d47b)}.btn.gray{background:#132945;border:1px solid #27486d}.btn.red{background:#8e2842}.btn:disabled{opacity:.45;cursor:not-allowed}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:linear-gradient(145deg,rgba(10,31,59,.96),rgba(5,19,38,.96));border:1px solid #173b65;border-radius:15px;padding:17px;box-shadow:0 10px 30px #0005}.statTitle{color:#91a8c9;font-size:13px}.big{font-size:27px;font-weight:850;margin-top:5px}.up{color:var(--green);font-size:12px}
+.sectionTitle{display:flex;justify-content:space-between;align-items:center;margin:22px 0 12px}.sectionTitle h2{margin:0;font-size:20px}
+.playerGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.player{position:relative;min-height:245px;padding:15px;border-radius:14px;border:1px solid #20466f;background:linear-gradient(160deg,#102b50,#07162d);overflow:hidden}.player:before{content:"";position:absolute;width:100px;height:100px;right:-30px;top:-30px;background:#1683ff33;border-radius:50%;filter:blur(4px)}.rating{font-size:30px;font-weight:900;color:#5dff9b}.pos{font-size:12px;color:#a8c0df}.avatar{font-size:58px;text-align:center;margin:8px}.pname{font-weight:800}.club{color:#9db3d1;font-size:12px}.value{font-weight:800;margin-top:8px}.tag{display:inline-block;padding:3px 7px;border-radius:7px;background:#16365b;color:#b9d4f4;font-size:11px;margin-top:7px}
+.bar{height:7px;background:#102846;border-radius:8px;overflow:hidden;margin:6px 0 10px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#17a4ff,#27e27d)}
+.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px;border-bottom:1px solid #183657;text-align:left}.table th{color:#8da6c7;font-size:12px}.news{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid #173553}.newsIcon{font-size:25px}
+.notice{padding:13px;border:1px solid #31557b;background:#0b2442;border-radius:11px;color:#c7d8ee}.danger{border-color:#733048;background:#341525}
+.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:14px}.tabs button{background:#0d2340;color:#9eb5d3;border:1px solid #1d4168;border-radius:9px;padding:9px 13px}.tabs button.active{background:#126bd6;color:white}
+.marketRow{display:grid;grid-template-columns:1fr 100px 120px 120px 110px;gap:12px;align-items:center;padding:13px;border-bottom:1px solid #173554}.marketRow strong{display:block}.marketRow span{color:#9bb0ca;font-size:12px}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:20;padding:20px}.modal.show{display:flex}.modalBox{width:min(650px,100%);background:#081a33;border:1px solid #2a527d;border-radius:17px;padding:22px;box-shadow:0 30px 80px #000}
+.toast{position:fixed;right:20px;bottom:20px;background:#102b4b;border:1px solid #31618f;padding:13px 16px;border-radius:11px;display:none;z-index:30}
+.footer{color:#607896;text-align:center;padding:25px}
+@media(max-width:1100px){.playerGrid{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.app{grid-template-columns:1fr}.side{position:fixed;left:-230px;z-index:15;transition:.2s}.side.open{left:0}.top{padding:0 12px}.topStats{display:none}.content{padding:12px}.hero{padding:20px;min-height:220px}.hero h1{font-size:29px}.heroBall{font-size:85px}.grid3,.grid2,.grid4{grid-template-columns:1fr}.playerGrid{grid-template-columns:repeat(2,1fr)}.marketRow{grid-template-columns:1fr 70px 90px}.marketRow .hideMob{display:none}}
+
+.realPhoto{width:92px;height:110px;object-fit:cover;border-radius:12px;border:1px solid #31577f;display:block;margin:8px auto;box-shadow:0 10px 25px #0007;background:#0c2340}
+.roleBanner{margin:14px 0;padding:15px 18px;border:1px solid #2a5687;border-radius:14px;background:linear-gradient(100deg,#0b2d58,#081a34);display:flex;gap:12px;align-items:center}
+.roleBanner .roleIcon{font-size:30px}
+.managerGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.choice{padding:15px;border:1px solid #214a77;border-radius:13px;background:#0a203d}
+.choice h3{margin:0 0 7px}.choice p{color:#9fb5d1;font-size:13px;min-height:38px}
+.photoCredit{font-size:10px;color:#6883a4;margin-top:6px}
+@media(max-width:760px){.managerGrid{grid-template-columns:1fr}.realPhoto{width:78px;height:96px}}
+
+/* v0.7 football database / career system */
+.logoImg{width:34px;height:34px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;vertical-align:middle}
+.countryFlag{font-size:22px;vertical-align:middle}
+.searchBox{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.searchBox input,.searchBox select{flex:1;min-width:160px;background:#081a31;border:1px solid #2a527d;color:#fff;padding:12px;border-radius:10px}
+.dataTable{width:100%;border-collapse:collapse}.dataTable th,.dataTable td{padding:10px 8px;border-bottom:1px solid #173858;text-align:left}.dataTable th{color:#86a9cc;font-size:12px;text-transform:uppercase}
+.difficulty{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.difficulty .choice{cursor:pointer}.difficulty .choice.selected{outline:2px solid #54a7ff;background:#0c2c52}
+.teamPick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.teamPick .choice{cursor:pointer}.teamPick .choice.selected{outline:2px solid #54a7ff}
+.trophy{font-size:30px}.awardGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:760px){.difficulty{grid-template-columns:1fr 1fr}.teamPick{grid-template-columns:1fr 1fr}.awardGrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side" id="side">
+  <div class="brand"><span class="ball">⚽</span><span>Football Talent<small style="display:block;color:#7591b7;font-size:10px">Scout • Build • Develop • Win</small></span></div>
+  <nav class="nav">
+    <button class="active" data-page="home">🏠 Главная</button><button data-page="scout">🔎 Скаутинг</button>
+    <button data-page="players">👥 Игроки</button><button data-page="career">🏆 Карьера</button><button data-page="manager">🧑‍💼 Мой кабинет</button><button data-page="competitions">🏆 Турниры</button><button data-page="stats">📊 Статистика</button><button data-page="squads">👥 Составы</button><button data-page="careers">💾 Карьеры</button>
+    <button data-page="world">🌍 Футбольный мир</button><button data-page="clubs">🛡️ Клубы</button><button data-page="market">↔️ Трансферы</button>
+    <button data-page="training">🏋️ Тренировки</button><button data-page="matches">⚽ Матчи</button>
+    <button data-page="finance">📊 Финансы</button><button data-page="achievements">🏅 Достижения</button>
+    <button data-page="settings">⚙️ Настройки</button>
+  </nav>
+</aside>
+<main class="main">
+<header class="top"><button class="btn gray" id="menuBtn">☰</button><input class="search" id="search" placeholder="🔎 Поиск игроков, клубов, стран..."><div id="globalSearchResults" class="globalSearchResults"></div><div class="topStats"><span>🌍</span><span>📅 <b id="date">12 Июл 2025</b></span><span class="money" id="topMoney">€12.35M</span></div></header>
+<div class="content">
+
+<section id="home" class="page active">
+<div class="hero"><div><div class="small">СЕЗОН 2025/26 • FOOTBALL TALENT AGENCY</div><h1>Добро пожаловать в Football Talent!</h1><p>Находи будущих звёзд, развивай игроков, веди переговоры и строй футбольную империю.</p><button class="btn" onclick="go('scout')">🔎 Перейти к скаутингу</button> <button class="btn gray" onclick="go('career')">🏁 Карьера</button></div><div class="heroBall">⚽</div></div>
+<div class="roleBanner"><div class="roleIcon">🧑‍💼</div><div><b>Ты — главный менеджер, тренер и скаут</b><div class="small">Принимай решения от первого лица: кого искать, кого тренировать, какую тактику выбрать и с кем вести переговоры.</div></div></div>
+<div class="grid4"><div class="card"><div class="statTitle">Бюджет</div><div class="big" id="budget">€12.35M</div><div class="up">+€3.25M / мес</div></div><div class="card"><div class="statTitle">Трансферный бюджет</div><div class="big" id="transferBudget">€7.40M</div><div class="up">+€1.20M / мес</div></div><div class="card"><div class="statTitle">Активные скауты</div><div class="big">5</div><div class="small">Европа • Южная Америка</div></div><div class="card"><div class="statTitle">Репутация агентства</div><div class="big" id="rep">68</div><div class="up">▲ +4</div></div></div>
+<div class="grid3"><div class="card"><div class="sectionTitle"><h2>⭐ Топ игроки</h2><button class="btn gray" onclick="go('players')">Все →</button></div><div id="topPlayers"></div></div><div class="card"><div class="sectionTitle"><h2>📰 Новости</h2></div><div class="news"><span class="newsIcon">🔥</span><div><b>Молодой талант привлёк внимание</b><div class="small">Сегодня, 10:24</div></div></div><div class="news"><span class="newsIcon">💼</span><div><b>Новый контракт готов к подписанию</b><div class="small">Сегодня, 08:15</div></div></div><div class="news"><span class="newsIcon">📈</span><div><b>Репутация агентства растёт</b><div class="small">Вчера</div></div></div></div><div class="card"><div class="sectionTitle"><h2>📅 Календарь</h2></div><div class="news"><span>⚽</span><div><b>Real Madrid — Barcelona</b><div class="small">26.07 • 22:00</div></div></div><div class="news"><span>⚽</span><div><b>Real Madrid — AC Milan</b><div class="small">02.08 • 20:00</div></div></div><div class="news"><span>⚽</span><div><b>Real Madrid — Man City</b><div class="small">09.08 • 21:00</div></div></div></div></div>
+<div class="card"><div class="sectionTitle"><h2>🌍 Скаутская сеть</h2><span class="small">18 стран • 42 отчёта</span></div><div class="grid3"><div><b>🇪🇸 Испания</b><div class="bar"><i style="width:92%"></i></div></div><div><b>🇧🇷 Бразилия</b><div class="bar"><i style="width:81%"></i></div></div><div><b>🇫🇷 Франция</b><div class="bar"><i style="width:76%"></i></div></div></div></div>
+</section>
+
+<section id="scout" class="page"><div class="sectionTitle"><h2>🔎 Скаутинг</h2><button class="btn green" onclick="scout()">Отправить скаута — €25K</button></div><div class="notice">Скаутинг не гарантирует звезду. Чем выше уровень скаутов и репутация агентства, тем больше шанс найти игрока с высоким потенциалом.</div><div class="grid3" style="margin-top:14px"><div class="card"><h3>🇪🇺 Европа</h3><p class="small">Германия, Испания, Франция, Италия, Португалия</p><b>Шанс высокого потенциала: 18%</b></div><div class="card"><h3>🇧🇷 Южная Америка</h3><p class="small">Бразилия, Аргентина, Уругвай</p><b>Шанс высокого потенциала: 24%</b></div><div class="card"><h3>🌍 Остальной мир</h3><p class="small">Африка, Азия, Северная Америка</p><b>Шанс высокого потенциала: 11%</b></div></div><div class="sectionTitle"><h2>Последние отчёты</h2></div><div class="card" id="scoutResults"></div></section>
+
+<section id="players" class="page"><div class="sectionTitle"><h2>👥 Мои игроки</h2><span class="small" id="playerCount"></span></div><div class="tabs"><button class="active" onclick="filterPlayers('all',this)">Все</button><button onclick="filterPlayers('young',this)">Молодые таланты</button><button onclick="filterPlayers('star',this)">Звёзды</button></div><div class="playerGrid" id="playerGrid"></div></section>
+
+<section id="career" class="page"><div class="sectionTitle"><h2>🏆 Карьера агентства</h2><button class="btn green" onclick="finishSeason()">🏁 Завершить сезон</button></div><div class="notice" id="seasonNotice">В конце каждого сезона ты сам выбираешь одну из трёх наград. До этого момента награды не выдаются.</div><div class="grid3"><div class="card"><div class="statTitle">Уровень</div><div class="big" id="level">3 — Агентство</div><div class="bar"><i style="width:64%"></i></div><p class="small">До уровня 4: 3 600 REP</p></div><div class="card"><div class="statTitle">Доход за карьеру</div><div class="big">€84.6M</div><div class="up">+€7.4M за сезон</div></div><div class="card"><div class="statTitle">Лучший трансфер</div><div class="big">€24.8M</div><div class="small">Прибыль €19.2M</div></div></div><div class="card"><h3>📈 Уровни</h3><table class="table"><tr><th>Уровень</th><th>Требование</th><th>Возможности</th></tr><tr><td>1 • Новичок</td><td>0 REP</td><td>1 страна</td></tr><tr><td>2 • Скаут</td><td>500 REP</td><td>5 стран</td></tr><tr><td>3 • Агентство</td><td>2 000 REP</td><td>Европа</td></tr><tr><td>4 • Большая компания</td><td>5 000 REP</td><td>Весь мир</td></tr><tr><td>5 • Империя</td><td>15 000 REP</td><td>500+ сотрудников</td></tr></table></div></section>
+
+
+<section id="manager" class="page">
+  <div class="sectionTitle"><h2>🧑‍💼 Мой кабинет — режим 1-го лица</h2><span class="small">Ты принимаешь ключевые решения агентства</span></div>
+  <div class="grid4">
+    <div class="card"><div class="statTitle">Роль</div><div class="big">Менеджер</div><div class="small">Скаут • Тренер • Переговорщик</div></div>
+    <div class="card"><div class="statTitle">Уровень скаута</div><div class="big" id="scoutLevel">2</div><div class="small">Качество отчётов</div></div>
+    <div class="card"><div class="statTitle">Тренерский уровень</div><div class="big" id="coachLevel">2</div><div class="small">Эффект тренировок</div></div>
+    <div class="card"><div class="statTitle">Мораль агентства</div><div class="big" id="morale">82</div><div class="small">Влияет на развитие и переговоры</div></div>
+  </div>
+  <div class="sectionTitle"><h2>🎯 Решения менеджера</h2></div>
+  <div class="managerGrid">
+    <div class="choice"><h3>🔎 Агрессивный скаутинг</h3><p>Больше отчётов, но выше расходы.</p><button class="btn" onclick="managerChoice('scout')">Выбрать</button></div>
+    <div class="choice"><h3>🏋️ Интенсивная подготовка</h3><p>Быстрее развивает игроков, но повышает усталость.</p><button class="btn" onclick="managerChoice('training')">Выбрать</button></div>
+    <div class="choice"><h3>🤝 Жёсткие переговоры</h3><p>Снижают цену сделки, но могут ухудшить отношения с клубом.</p><button class="btn" onclick="managerChoice('negotiation')">Выбрать</button></div>
+  </div>
+  <div class="sectionTitle"><h2>🧠 Текущий стиль</h2></div>
+  <div class="notice" id="managerStatus">Ты управляешь всем циклом: поиск → развитие → переговоры → трансфер → результат.</div>
+</section>
+
+
+<section id="world" class="page">
+ <div class="sectionTitle"><h2>🌍 Футбольный мир</h2><span class="small">Страны, лиги, кубки и европейские турниры</span></div>
+ <div class="searchBox"><input id="worldSearch" placeholder="Поиск клуба, страны, лиги, игрока..." oninput="searchWorld()"><select id="worldFilter" onchange="searchWorld()"><option value="all">Все</option><option value="club">Клубы</option><option value="player">Игроки</option><option value="league">Лиги</option><option value="country">Страны</option></select></div>
+ <div id="worldResults" class="grid3"></div>
+</section>
+<section id="squads" class="page">
+ <div class="sectionTitle"><h2>👥 Составы команд</h2><span class="small">Можно открыть любой клуб</span></div>
+ <div class="searchBox"><input id="squadSearch" placeholder="Например: Real Madrid, Barcelona, Arsenal..." oninput="renderSquads()"></div>
+ <div id="squadResults"></div>
+</section>
+<section id="competitions" class="page">
+ <div class="sectionTitle"><h2>🏆 Турниры и трофеи</h2></div>
+ <div class="grid3">
+  <div class="card"><div class="trophy">🏆</div><h3>UEFA Champions League</h3><p class="small">Главный клубный турнир Европы.</p></div>
+  <div class="card"><div class="trophy">🏆</div><h3>UEFA Europa League</h3><p class="small">Второй по уровню клубный турнир UEFA.</p></div>
+  <div class="card"><div class="trophy">🏆</div><h3>UEFA Conference League</h3><p class="small">Третий клубный турнир UEFA.</p></div>
+ </div>
+ <div class="sectionTitle"><h2>🏟️ Национальные чемпионаты и кубки</h2></div><div id="competitionList" class="grid3"></div>
+</section>
+<section id="stats" class="page">
+ <div class="sectionTitle"><h2>📊 Статистика и награды</h2></div>
+ <div class="awardGrid">
+  <div class="card"><div class="trophy">⚽</div><h3>Лучший бомбардир</h3><div id="topScorer">—</div></div>
+  <div class="card"><div class="trophy">🎯</div><h3>Лучший ассистент</h3><div id="topAssist">—</div></div>
+  <div class="card"><div class="trophy">👟</div><h3>Золотая бутса</h3><div id="goldenShoe">—</div></div>
+  <div class="card"><div class="trophy">🏅</div><h3>Ballon d'Or</h3><div id="ballon">—</div></div>
+  <div class="card"><div class="trophy">🌍</div><h3>Игрок года UEFA</h3><div id="uefaAward">—</div></div>
+  <div class="card"><div class="trophy">🧤</div><h3>Лучший вратарь</h3><div id="bestKeeper">—</div></div>
+ </div>
+ <div class="sectionTitle"><h2>🏆 Лидеры лиг</h2></div><div id="leagueLeaders"></div>
+</section>
+<section id="careers" class="page">
+ <div class="sectionTitle"><h2>💾 Мои карьеры</h2><span class="small">Несколько независимых сохранений</span></div>
+ <button class="btn" onclick="showNewCareer()">➕ Новая карьера</button>
+ <div id="careerList" class="grid3" style="margin-top:12px"></div>
+</section>
+
+<section id="clubs" class="page"><div class="sectionTitle"><h2>🛡️ Клубы</h2><input class="search" style="max-width:300px" id="clubSearch" placeholder="Поиск клуба"></div><div class="card"><table class="table" id="clubTable"><tr><th>Клуб</th><th>Страна</th><th>Уровень</th><th>Бюджет</th><th>Интерес</th></tr></table></div></section>
+
+<section id="market" class="page"><div class="sectionTitle"><h2>↔️ Трансферный рынок</h2><span class="small">Цены зависят от возраста, рейтинга, потенциала, формы и спроса.</span></div><div class="card" id="marketList"></div></section>
+
+<section id="training" class="page"><div class="sectionTitle"><h2>🏋️ Тренировки</h2></div><div class="grid3"><div class="card"><h3>⚡ Интенсивная</h3><p class="small">+1–3 OVR, но повышает риск усталости.</p><button class="btn" onclick="train(1)">Тренировать</button></div><div class="card"><h3>🎯 Техническая</h3><p class="small">+2 к случайному навыку.</p><button class="btn" onclick="train(2)">Тренировать</button></div><div class="card"><h3>🧠 Тактическая</h3><p class="small">+форма и шанс роста стоимости.</p><button class="btn" onclick="train(3)">Тренировать</button></div></div><div class="card" style="margin-top:14px"><h3>Последние тренировки</h3><div id="trainingLog"></div></div></section>
+
+<section id="matches" class="page"><div class="sectionTitle"><h2>⚽ Матчи и симуляция</h2><button class="btn" onclick="playMatch()">▶ Симулировать следующий матч</button></div><div class="grid2"><div class="card"><h3>Real Madrid — Barcelona</h3><div style="font-size:40px;text-align:center;margin:20px">🏳️ 2 : 1 🏳️</div><p class="small">Товарищеский матч • 26.07.2025</p></div><div class="card"><h3>Последние результаты</h3><div id="matchLog"></div></div></div></section>
+
+<section id="finance" class="page"><div class="sectionTitle"><h2>📊 Финансы</h2></div><div class="grid4"><div class="card"><div class="statTitle">Активы</div><div class="big">€31.8M</div></div><div class="card"><div class="statTitle">Доход / месяц</div><div class="big">€3.25M</div></div><div class="card"><div class="statTitle">Расход / месяц</div><div class="big">€1.14M</div></div><div class="card"><div class="statTitle">Чистая прибыль</div><div class="big">€2.11M</div></div></div><div class="card"><h3>Экономика трансфера</h3><p>Покупка учитывает рыночную стоимость. После покупки цена не взлетает автоматически: игроку нужны матчи, развитие, форма и спрос клубов.</p><div class="notice">💡 Максимальная прибыль обычно требует времени: развивай талант 1–3 сезона, а не продавай сразу.</div></div></section>
+
+<section id="achievements" class="page"><div class="sectionTitle"><h2>🏅 Достижения</h2></div><div class="grid3"><div class="card">🔎 <b>Первый талант</b><p class="small">Найди первого игрока.</p><b>✓ Получено</b></div><div class="card">💰 <b>Большая сделка</b><p class="small">Продай игрока дороже €10M.</p><b>✓ Получено</b></div><div class="card">🌟 <b>Будущая звезда</b><p class="small">Развей игрока до OVR 85+.</p><b>Не получено</b></div><div class="card">🌍 <b>Глобальная сеть</b><p class="small">Открой 15 стран.</p><b>Не получено</b></div><div class="card">🏆 <b>Империя</b><p class="small">Достигни 5 уровня агентства.</p><b>Не получено</b></div></div></section>
+
+<section id="settings" class="page"><div class="sectionTitle"><h2>⚙️ Настройки</h2></div><div class="card"><h3>Сохранение</h3><p class="small">Игра автоматически сохраняется в браузере.</p><button class="btn green" onclick="save();toast('Сохранение выполнено')">💾 Сохранить</button> <button class="btn red" onclick="resetGame()">Сбросить игру</button></div><div class="card" style="margin-top:14px"><h3>О Football Talent</h3><p>Веб-версия v0.8.0 • Игровые данные хранятся локально. Реальные футболисты используются как справочные персонажи. Фото реальных игроков в прототипе подключаются из Wikimedia Commons; лицензии и авторы указаны в карточках/README.</p></div></section>
+
+<div class="footer">⚽ Football Talent v0.8.0 • Scout • Build • Develop • Win</div>
+</div></main></div>
+<div class="modal" id="modal"><div class="modalBox" id="modalBox"></div></div><div class="toast" id="toast"></div>
+<script>
+
+const COUNTRIES=[
+["🇪🇸","Испания","La Liga","Copa del Rey"],["🇬🇧","Англия","Premier League","FA Cup"],["🇮🇹","Италия","Serie A","Coppa Italia"],
+["🇩🇪","Германия","Bundesliga","DFB-Pokal"],["🇫🇷","Франция","Ligue 1","Coupe de France"],["🇵🇹","Португалия","Primeira Liga","Taça de Portugal"],
+["🇳🇱","Нидерланды","Eredivisie","KNVB Cup"],["🇹🇷","Турция","Süper Lig","Türkiye Kupası"],["🇦🇿","Азербайджан","Misli Premier League","Azərbaycan Kuboku"],
+["🇧🇪","Бельгия","Belgian Pro League","Croky Cup"],["🇧🇷","Бразилия","Campeonato Brasileiro Série A","Copa do Brasil"],["🇦🇷","Аргентина","Liga Profesional","Copa Argentina"]
+];
+const CLUBS=[
+["Real Madrid","🇪🇸","https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg"],["Barcelona","🇪🇸","https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg"],
+["Atlético Madrid","🇪🇸","https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg"],["Manchester City","🇬🇧","https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg"],
+["Manchester United","🇬🇧","https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg"],["Liverpool","🇬🇧","https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg"],
+["Arsenal","🇬🇧","https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg"],["Bayern Munich","🇩🇪","https://upload.wikimedia.org/wikipedia/en/1/1f/FC_Bayern_München_logo_%282017%29.svg"],
+["Borussia Dortmund","🇩🇪","https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg"],["PSG","🇫🇷","https://upload.wikimedia.org/wikipedia/en/a/a2/Paris_Saint-Germain_F.C..svg"],
+["Juventus","🇮🇹","https://upload.wikimedia.org/wikipedia/commons/1/15/Juventus_FC_2017_logo.svg"],["Inter","🇮🇹","https://upload.wikimedia.org/wikipedia/commons/0/05/Inter_Milan_2021.svg"],
+["AC Milan","🇮🇹","https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg"],["Benfica","🇵🇹","https://upload.wikimedia.org/wikipedia/en/a/a2/SL_Benfica_logo.svg"],
+["Ajax","🇳🇱","https://upload.wikimedia.org/wikipedia/en/7/79/Ajax_Amsterdam.svg"],["Fenerbahçe","🇹🇷","https://upload.wikimedia.org/wikipedia/en/3/39/Fenerbahçe_logo.svg"],
+["Qarabağ","🇦🇿","https://upload.wikimedia.org/wikipedia/en/7/7f/Qarabağ_FK_logo.svg"],["Sabah FC","🇦🇿","https://upload.wikimedia.org/wikipedia/en/8/87/Sabah_FK_logo.svg"]
+];
+const REAL_PLAYERS_MORE=[
+["Erling Haaland","ST",91,94,26,"Manchester City","🇳🇴"],["Vinícius Júnior","LW",90,93,26,"Real Madrid","🇧🇷"],
+["Lamine Yamal","RW",89,96,19,"Barcelona","🇪🇸"],["Bukayo Saka","RW",87,91,25,"Arsenal","🇬🇧"],
+["Mohamed Salah","RW",88,88,34,"Liverpool","🇪🇬"],["Harry Kane","ST",88,88,33,"Bayern Munich","🏴"],
+["Kevin De Bruyne","CM",86,86,35,"Manchester City","🇧🇪"],["Federico Valverde","CM",88,92,27,"Real Madrid","🇺🇾"],
+["Aurélien Tchouaméni","DM",86,91,26,"Real Madrid","🇫🇷"],["William Saliba","CB",87,92,25,"Arsenal","🇫🇷"],
+["Alessandro Bastoni","CB",87,91,27,"Inter","🇮🇹"],["Thibaut Courtois","GK",89,89,34,"Real Madrid","🇧🇪"],
+["Alisson","GK",89,89,33,"Liverpool","🇧🇷"],["Nuno Mendes","LB",86,92,24,"PSG","🇵🇹"],
+["Achraf Hakimi","RB",87,89,27,"PSG","🇲🇦"],["Rafael Leão","LW",86,90,27,"AC Milan","🇵🇹"],
+["Florian Wirtz","CAM",88,94,23,"Bayern Munich","🇩🇪"],["Jamal Musiala","CAM",88,95,23,"Bayern Munich","🇩🇪"],
+["Pedri","CM",86,92,23,"Barcelona","🇪🇸"],["Fermín López","CM",80,89,23,"Barcelona","🇪🇸"]
+];
+const COMPETITIONS=[
+["🇪🇸","La Liga","Spain"],["🇬🇧","Premier League","England"],["🇮🇹","Serie A","Italy"],["🇩🇪","Bundesliga","Germany"],["🇫🇷","Ligue 1","France"],
+["🇵🇹","Primeira Liga","Portugal"],["🇳🇱","Eredivisie","Netherlands"],["🇹🇷","Süper Lig","Turkey"],["🇦🇿","Misli Premier League","Azerbaijan"],
+["🌍","UEFA Champions League","Europe"],["🌍","UEFA Europa League","Europe"],["🌍","UEFA Conference League","Europe"]
+];
+const EURO_AWARDS=["Ballon d'Or","European Golden Shoe","UEFA Men's Player of the Year","UEFA Champions League Player of the Season","The Best FIFA Men's Player"];
+
+const realPlayers=[
+{name:"Kylian Mbappé",pos:"ST",ovr:91,pot:94,age:26,club:"Real Madrid",value:180000000,flag:"🇫🇷",photo:"https://commons.wikimedia.org/wiki/Special:FilePath/Kylian_Mbappe_France_v_Spain_7.24.26-135.jpg",credit:"Bryan Berlin / WikiPortraits — CC BY-SA 4.0"},
+{name:"Jude Bellingham",pos:"CAM",ovr:89,pot:94,age:22,club:"Real Madrid",value:150000000,flag:"🏴",photo:"https://commons.wikimedia.org/wiki/Special:FilePath/Jude_Bellingham_England_v_Ghana_23_June_2026-168.jpg",credit:"Bryan Berlin / WikiPortraits — CC BY-SA 4.0"},
+{name:"Rodrygo",pos:"RW",ovr:87,pot:91,age:24,club:"Real Madrid",value:100000000,flag:"🇧🇷",photo:"https://commons.wikimedia.org/wiki/Special:FilePath/Rodrygo.jpg",credit:"Wikimedia Commons — see source page"},
+{name:"Pedri",pos:"CM",ovr:86,pot:92,age:22,club:"Barcelona",value:90000000,flag:"🇪🇸",photo:"https://commons.wikimedia.org/wiki/Special:FilePath/Pedri.jpg",credit:"Biso — CC BY 4.0"},
+{name:"Virgil van Dijk",pos:"CB",ovr:85,pot:85,age:34,club:"Liverpool",value:60000000,flag:"🇳🇱",photo:"https://commons.wikimedia.org/wiki/Special:FilePath/Virgil_van_Dijk_2021.jpg",credit:"Wikimedia Commons — see source page"}
+];
+let players=JSON.parse(localStorage.getItem("ft_players")||"null")||[
+{name:"Álvaro Mendes",pos:"ST",ovr:67,pot:88,age:17,club:"Academy FC",value:850000,flag:"🇵🇹",form:78},
+{name:"Kenji Sato",pos:"RW",ovr:64,pot:86,age:16,club:"Tokyo Youth",value:620000,flag:"🇯🇵",form:82},
+{name:"Mateo Silva",pos:"CM",ovr:70,pot:84,age:18,club:"Buenos Aires FC",value:1200000,flag:"🇦🇷",form:76},
+{name:"Ethan Cole",pos:"CB",ovr:61,pot:82,age:17,club:"London Academy",value:450000,flag:"🏴",form:72},
+{name:"Rafael Costa",pos:"GK",ovr:69,pot:89,age:18,club:"Lisbon Stars",value:950000,flag:"🇧🇷",form:84}
+];
+let state=JSON.parse(localStorage.getItem("ft_state")||"null")||{};
+const DEFAULT_STATE={budget:12350000,transfer:7400000,rep:55,level:1,scoutLevel:1,coachLevel:1,morale:80,style:"Сбалансированный",season:2026,activeCareer:null,careers:[],seasonReady:false,seasonAward:null};
+state={...DEFAULT_STATE,...state};
+function difficultyBudget(d){return {"Очень легко":30000000,"Легко":20000000,"Нормальная":12350000,"Сложно":7000000,"Хардкор":2500000}[d]||12350000}
+function difficultyTransfer(d){return {"Очень легко":18000000,"Легко":12000000,"Нормальная":7400000,"Сложно":3800000,"Хардкор":1200000}[d]||7400000}
+function repairEconomy(){
+  if(!Number.isFinite(Number(state.budget))||state.budget<0) state.budget=difficultyBudget(state.difficulty||"Нормальная");
+  if(!Number.isFinite(Number(state.transfer))||state.transfer<0) state.transfer=difficultyTransfer(state.difficulty||"Нормальная");
+  if(!Number.isFinite(Number(state.rep))) state.rep=state.difficulty==="Хардкор"?35:55;
+  if(!Number.isFinite(Number(state.level))) state.level=1;
+  if(!Number.isFinite(Number(state.scoutLevel))) state.scoutLevel=1;
+  if(!Number.isFinite(Number(state.coachLevel))) state.coachLevel=1;
+  if(!Number.isFinite(Number(state.morale))) state.morale=80;
+  if(!Number.isFinite(Number(state.season))) state.season=2026;
+  if(!Array.isArray(state.careers)) state.careers=[];
+  state.budget=Math.round(state.budget); state.transfer=Math.round(state.transfer);
+}
+const clubs=[["Real Madrid","🇪🇸 Spain","World Class","€1.2B"],["Barcelona","🇪🇸 Spain","World Class","€500M"],["Manchester City","🏴 England","World Class","€900M"],["Arsenal","🏴 England","Elite","€350M"],["Bayern Munich","🇩🇪 Germany","Elite","€420M"],["PSG","🇫🇷 France","Elite","€600M"],["Inter","🇮🇹 Italy","Elite","€300M"],["Benfica","🇵🇹 Portugal","Strong","€180M"]];
+function money(n){
+  n=Number(n);
+  if(!Number.isFinite(n)) n=0;
+  return "€"+(n>=1e9?(n/1e9).toFixed(2)+"B":n>=1e6?(n/1e6).toFixed(2)+"M":n>=1e3?(n/1e3).toFixed(0)+"K":Math.round(n))
+}
+function save(){localStorage.setItem("ft_players",JSON.stringify(players));localStorage.setItem("ft_state",JSON.stringify(state))}
+function toast(t){let e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",2200)}
+function go(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));render();scrollTo(0,0)}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.page));
+document.getElementById("menuBtn").onclick=()=>document.getElementById("side").classList.toggle("open");
+function card(p){
+  let v=calcValue(p);
+  let photo=p.photo?`<img class="realPhoto" src="${p.photo}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'">`:`<div class="avatar">${p.flag||"⚽"}</div>`;
+  let credit=p.credit?`<div class="photoCredit">${p.credit}</div>`:"";
+  return `<div class="player"><div><span class="rating">${p.ovr}</span> <span class="pos">${p.pos}</span></div>${photo}${credit}<div class="pname">${p.name}</div><div class="club">${p.club} • ${p.age} лет</div><div class="value">${money(v)}</div><span class="tag">Потенциал ${p.pot}</span><div class="bar"><i style="width:${p.ovr}%"></i></div><button class="btn gray" style="width:100%" onclick='openPlayer(${JSON.stringify(p.name)})'>Подробнее</button></div>`
+}
+function calcValue(p){
+  let base=Number(p.value); if(!Number.isFinite(base)) base=50000;
+  let ageFactor=p.age<21?1.08:p.age<25?1.02:p.age<29?.95:.72;
+  let quality=1+(p.ovr-65)*.018+(p.pot-p.ovr)*.012;
+  let demand=1+(Number(p.form||75)-75)*0.0015;
+  return Math.max(50000,Math.round(base*ageFactor*quality*demand));
+}
+function render(){
+repairEconomy();
+if(document.getElementById("date")) document.getElementById("date").textContent="Сезон "+state.season+"/"+(state.season+1);
+if(document.getElementById("seasonNotice")) document.getElementById("seasonNotice").textContent=state.seasonReady?"Сезон завершён. Выбери одну награду, чтобы начать следующий сезон.":"В конце каждого сезона ты сам выбираешь одну из трёх наград. До этого момента награды не выдаются.";
+document.getElementById("budget").textContent=money(state.budget);document.getElementById("transferBudget").textContent=money(state.transfer);document.getElementById("topMoney").textContent=money(state.budget);document.getElementById("rep").textContent=state.rep;document.getElementById("level").textContent=state.level+" — "+(["","Новичок","Скаут","Агентство","Большая компания","Империя"][state.level]||"Агентство");
+document.getElementById("topPlayers").innerHTML=realPlayers.slice(0,3).map(p=>`<div class="news"><span>${p.photo?`<img src="${p.photo}" style="width:42px;height:52px;object-fit:cover;border-radius:7px" onerror="this.style.display='none'">`:p.flag}</span><b>${p.name}</b><span style="margin-left:auto;color:#5dff9b">${p.ovr}</span></div>`).join("");
+if(document.getElementById("scoutLevel")) document.getElementById("scoutLevel").textContent=state.scoutLevel;
+if(document.getElementById("coachLevel")) document.getElementById("coachLevel").textContent=state.coachLevel;
+if(document.getElementById("morale")) document.getElementById("morale").textContent=state.morale;
+renderPlayers();renderMarket();renderClubs();document.getElementById("scoutResults").innerHTML=document.getElementById("scoutResults").innerHTML||"<p class='small'>Пока нет новых отчётов. Отправь скаута.</p>";
+}
+function renderPlayers(list=players){document.getElementById("playerCount").textContent=list.length+" игроков";document.getElementById("playerGrid").innerHTML=list.map(card).join("")||"<div class='notice'>У тебя пока нет игроков.</div>"}
+function filterPlayers(t,b){document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderPlayers(t==="young"?players.filter(p=>p.age<=18):t==="star"?players.filter(p=>p.ovr>=80):players)}
+function renderMarket(){let pool=[...players,...realPlayers];document.getElementById("marketList").innerHTML=pool.map(p=>`<div class="marketRow"><div><strong>${p.flag} ${p.name}</strong><span>${p.pos} • ${p.age} лет • ${p.club}</span></div><b>${p.ovr}</b><b>${money(calcValue(p))}</b><span class="hideMob">Потенциал ${p.pot}</span><button class="btn ${players.includes(p)?"green":"gray"}" onclick='buyPlayer(${JSON.stringify(p.name)})'>${players.includes(p)?"Ваш":"Купить"}</button></div>`).join("")}
+function renderClubs(){let q=(document.getElementById("clubSearch")?.value||"").toLowerCase();document.getElementById("clubTable").innerHTML='<tr><th>Клуб</th><th>Страна</th><th>Уровень</th><th>Бюджет</th><th>Интерес</th></tr>'+clubs.filter(c=>c.join(" ").toLowerCase().includes(q)).map(c=>`<tr><td><b>${c[0]}</b></td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td><td>🔥 Высокий</td></tr>`).join("")}
+document.getElementById("clubSearch").oninput=renderClubs;
+function scout(){if(state.budget<25000){toast("Недостаточно денег");return}state.budget-=25000;let countries=[["🇪🇸","Испания"],["🇧🇷","Бразилия"],["🇫🇷","Франция"],["🇦🇿","Азербайджан"],["🇩🇪","Германия"],["🇦🇷","Аргентина"],["🇯🇵","Япония"]];let [flag,country]=countries[Math.floor(Math.random()*countries.length)],age=15+Math.floor(Math.random()*5),ovr=52+Math.floor(Math.random()*23),pot=Math.min(94,ovr+8+Math.floor(Math.random()*25));let first=["Luca","Noah","Daniel","Emir","Leo","Milan","Alex","Yusuf","Nico","Rayan"][Math.floor(Math.random()*10)],last=["Silva","Costa","Müller","Santos","Aliyev","Martins","Kovács","Rossi","Tanaka","Moretti"][Math.floor(Math.random()*10)];let p={name:first+" "+last,pos:["ST","RW","CM","CB","GK","CAM"][Math.floor(Math.random()*6)],ovr,pot,age,club:country+" Youth",value:Math.round((60000+ovr*9000)*(1+(pot-ovr)*.03)),flag,form:70+Math.floor(Math.random()*25)};players.unshift(p);save();document.getElementById("scoutResults").innerHTML=`<div class="card" style="margin-bottom:10px"><b>🆕 Найден игрок: ${p.flag} ${p.name}</b><p>${p.pos} • ${p.age} лет • OVR ${p.ovr} • Потенциал ${p.pot}</p><span class="tag">Предварительная оценка стоимости ${money(p.value)}</span></div>`+document.getElementById("scoutResults").innerHTML;toast("Скаут нашёл нового игрока!");render()}
+function openPlayer(name){let p=players.find(x=>x.name===name)||realPlayers.find(x=>x.name===name);if(!p)return;document.getElementById("modalBox").innerHTML=`${p.photo?`<img class="realPhoto" style="width:130px;height:160px" src="${p.photo}" alt="${p.name}" onerror="this.style.display='none'">`:""}<h2>${p.flag} ${p.name}</h2><p class="small">${p.club} • ${p.pos} • ${p.age} лет</p><div class="grid3"><div class="card"><div class="statTitle">OVR</div><div class="big">${p.ovr}</div></div><div class="card"><div class="statTitle">Потенциал</div><div class="big">${p.pot}</div></div><div class="card"><div class="statTitle">Рынок</div><div class="big">${money(calcValue(p))}</div></div></div><p>Потенциал скрыт не полностью: форма, тренировки, игровое время и возраст влияют на развитие. Даже высокий потенциал не гарантирует максимальный OVR.</p><button class="btn" onclick="closeModal()">Закрыть</button>`;document.getElementById("modal").classList.add("show")}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")closeModal()}
+function buyPlayer(name){let p=players.find(x=>x.name===name);if(p){toast("Этот игрок уже в агентстве");return}p=realPlayers.find(x=>x.name===name);if(!p)return;let price=Math.round(calcValue(p));if(state.transfer<price){toast("Не хватает трансферного бюджета");return}state.transfer-=price;players.push({...p,form:80});save();toast("Игрок подписан");render()}
+function train(type){if(!players.length){toast("Сначала найди игрока");return}let p=players[Math.floor(Math.random()*players.length)],old=p.ovr;let gain=type===1?1+Math.floor(Math.random()*3)+Math.floor(state.coachLevel/3):type===2?1+Math.floor(state.coachLevel/4):0;p.ovr=Math.min(p.pot,p.ovr+gain);if(type===3)p.form=Math.min(99,(p.form||75)+6);save();document.getElementById("trainingLog").innerHTML=`<div class="news"><span>🏋️</span><div><b>${p.name}</b>: OVR ${old} → ${p.ovr}<div class="small">Тренировка завершена</div></div></div>`+document.getElementById("trainingLog").innerHTML;toast(`${p.name}: развитие +${p.ovr-old}`);render()}
+function playMatch(){let a=Math.floor(Math.random()*4),b=Math.floor(Math.random()*3);document.getElementById("matchLog").innerHTML=`<div class="news"><span>⚽</span><div><b>Real Madrid ${a} : ${b} Barcelona</b><div class="small">Матч симулирован • игроки получили опыт</div></div></div>`+document.getElementById("matchLog").innerHTML;state.rep+=a>b?1:0;save();render()}
+function managerChoice(type){
+  if(type==="scout"){
+    if(state.budget<15000){toast("Недостаточно денег для усиленного скаутинга");return}
+    state.budget-=15000; state.scoutLevel=Math.min(5,state.scoutLevel+1); state.rep=Math.min(100,state.rep+1);
+    state.style="Агрессивный скаутинг"; document.getElementById("managerStatus").textContent="Стиль: агрессивный скаутинг. Сеть поиска расширена.";
+    toast("Уровень скаута повышен");
+  }
+  if(type==="training"){
+    state.coachLevel=Math.min(5,state.coachLevel+1); state.morale=Math.max(40,state.morale-2);
+    state.style="Интенсивная подготовка"; document.getElementById("managerStatus").textContent="Стиль: интенсивная подготовка. Игроки развиваются быстрее, но устают.";
+    toast("Тренерский уровень повышен");
+  }
+  if(type==="negotiation"){
+    state.rep=Math.min(100,state.rep+2); state.morale=Math.min(100,state.morale+1);
+    state.style="Жёсткие переговоры"; document.getElementById("managerStatus").textContent="Стиль: жёсткие переговоры. Ты стараешься выбивать лучшие условия.";
+    toast("Репутация на переговорах выросла");
+  }
+  repairEconomy(); save(); renderCareerList(); renderCompetitions(); renderStats(); searchWorld(); renderSquads();
+}
+
+let chosenDifficulty="Нормальная",chosenTeam="Real Madrid";
+function showNewCareer(){document.getElementById("newCareerPanel").style.display="flex";chosenDifficulty="Нормальная";chosenTeam="Real Madrid";document.querySelectorAll(".difficulty .choice").forEach(x=>x.classList.toggle("selected",x.dataset.diff===chosenDifficulty));renderTeamChoices()}
+function closeNewCareer(){document.getElementById("newCareerPanel").style.display="none"}
+function pickDifficulty(el){chosenDifficulty=el.dataset.diff;document.querySelectorAll(".difficulty .choice").forEach(x=>x.classList.remove("selected"));el.classList.add("selected")}
+function renderTeamChoices(){document.getElementById("teamChoices").innerHTML=CLUBS.slice(0,16).map(c=>`<div class="choice ${chosenTeam===c[0]?'selected':''}" onclick="chosenTeam=${JSON.stringify(c[0])};renderTeamChoices()"><img class="logoImg" src="${c[2]}" onerror="this.style.display='none'"> <b>${c[0]}</b><div class="small">${c[1]}</div></div>`).join("")}
+function createCareer(){
+ const name=(document.getElementById("careerNameInput").value||"Моя карьера").trim();
+ const budget=difficultyBudget(chosenDifficulty), transfer=difficultyTransfer(chosenDifficulty);
+ const career={id:Date.now(),name,team:chosenTeam,difficulty:chosenDifficulty,season:2026,budget,transfer,rep:chosenDifficulty==="Хардкор"?35:55,level:1,scoutLevel:1,coachLevel:1,morale:80,style:"Сбалансированный",seasonReady:false,seasonAward:null,updated:new Date().toLocaleDateString()};
+ state={...career,activeCareer:career.id,careers:[...(state.careers||[]).filter(c=>c.id!==career.id),career]};
+ players=[{name:"Álvaro Mendes",pos:"ST",ovr:67,pot:88,age:17,club:"Academy FC",value:850000,flag:"🇵🇹",form:78},{name:"Kenji Sato",pos:"RW",ovr:64,pot:86,age:16,club:"Tokyo Youth",value:620000,flag:"🇯🇵",form:82},{name:"Mateo Silva",pos:"CM",ovr:70,pot:84,age:18,club:"Buenos Aires FC",value:1200000,flag:"🇦🇷",form:76},{name:"Ethan Cole",pos:"CB",ovr:61,pot:82,age:17,club:"London Academy",value:450000,flag:"🏴",form:72},{name:"Rafael Costa",pos:"GK",ovr:69,pot:89,age:18,club:"Lisbon Stars",value:950000,flag:"🇧🇷",form:84}];
+ repairEconomy();syncActiveCareer();save();closeNewCareer();render();renderCareerList();alert("Карьера создана: "+name+" • "+chosenTeam+" • "+chosenDifficulty+" • Бюджет "+money(budget));
+}
+function syncActiveCareer(){if(!state.activeCareer)return;let c=(state.careers||[]).find(x=>x.id===state.activeCareer);if(c){Object.assign(c,{name:state.careerName||state.name||c.name,team:state.team,difficulty:state.difficulty,season:state.season,budget:state.budget,transfer:state.transfer,rep:state.rep,level:state.level,scoutLevel:state.scoutLevel,coachLevel:state.coachLevel,morale:state.morale,seasonReady:state.seasonReady,seasonAward:state.seasonAward,updated:new Date().toLocaleDateString()});state.careerName=c.name}}
+function renderCareerList(){let el=document.getElementById("careerList");if(!el)return;el.innerHTML=(state.careers||[]).map(c=>`<div class="card"><h3>💾 ${c.name}</h3><p>${c.team} • ${c.difficulty}</p><p class="small">Сезон ${c.season} • ${money(c.budget)}</p><button class="btn" onclick="openCareer(${c.id})">Открыть</button></div>`).join("")||'<div class="notice">Пока нет карьер. Создай первую!</div>'}
+function openCareer(id){let c=(state.careers||[]).find(x=>x.id===id);if(!c)return;state={...DEFAULT_STATE,...c,activeCareer:id,careers:state.careers};repairEconomy();save();render();toast("Карьера открыта: "+c.name)}
+function finishSeason(){
+ if(state.seasonReady){toast("Сначала выбери награду сезона");showSeasonRewards();return}
+ state.seasonReady=true;
+ const income=Math.round((state.budget*0.10)+150000);
+ state.budget+=income;state.transfer=Math.round(state.transfer+income*0.35);state.rep=Math.min(100,state.rep+Math.max(1,Math.floor(income/500000)));
+ players.forEach(p=>{if(p.ovr<p.pot&&Math.random()<0.7)p.ovr=Math.min(p.pot,p.ovr+1);p.form=Math.max(65,Math.min(99,(p.form||75)+Math.floor(Math.random()*9)-4));});
+ syncActiveCareer();save();render();showSeasonRewards();
+}
+function showSeasonRewards(){
+ const modal=document.getElementById("modalBox");
+ const choices=[{id:"money",icon:"💰",name:"Финансовый бонус",desc:"+€2.5M к бюджету"},{id:"rep",icon:"⭐",name:"Репутационный бонус",desc:"+10 репутации агентства"},{id:"scout",icon:"🔎",name:"Скаутский бонус",desc:"+1 уровень скаутинга"}];
+ modal.innerHTML=`<h2>🏆 Награды сезона ${state.season}/${state.season+1}</h2><p class="small">Награда появляется только после завершения сезона. Каждый сезон ты выбираешь ровно одну.</p><div class="grid3">${choices.map(c=>`<div class="choice"><div class="trophy">${c.icon}</div><h3>${c.name}</h3><p>${c.desc}</p><button class="btn" onclick="claimSeasonReward('${c.id}')">Выбрать</button></div>`).join("")}</div>`;
+ document.getElementById("modal").classList.add("show");
+}
+function claimSeasonReward(id){
+ const rewards={money:["Финансовый бонус",()=>state.budget+=2500000],rep:["Репутационный бонус",()=>state.rep=Math.min(100,state.rep+10)],scout:["Скаутский бонус",()=>state.scoutLevel=Math.min(5,state.scoutLevel+1)]};
+ const r=rewards[id];if(!r)return;r[1]();state.seasonAward=r[0];state.seasonReady=false;state.season++;syncActiveCareer();save();closeModal();render();renderCareerList();toast("Выбрана награда: "+r[0]+". Новый сезон начался!");
+}
+function searchWorld(){
+ let q=norm(document.getElementById("worldSearch").value), f=document.getElementById("worldFilter").value;
+ let out=[];
+ if(!q){document.getElementById("worldResults").innerHTML='<div class="notice">Начни вводить название игрока, клуба, страны или лиги.</div>';return}
+ CLUBS.forEach(c=>{if((f==="all"||f==="club")&&norm(c.join(" ")).includes(q))out.push(`<div class="card"><img class="logoImg" src="${c[2]}" onerror="this.style.display='none'"><h3>${c[0]}</h3><p>${c[1]}</p><button class="btn" onclick='openClub(${JSON.stringify(c[0])})'>Состав</button></div>`)});
+ REAL_PLAYERS_MORE.forEach(p=>{if((f==="all"||f==="player")&&norm(p.join(" ")).includes(q))out.push(`<div class="card"><div class="countryFlag">${p[6]}</div><h3>${p[0]}</h3><p>${p[1]} • ${p[4]} лет • ${p[5]}</p><b>OVR ${p[2]} • POT ${p[3]}</b></div>`)});
+ realPlayers.forEach(p=>{if((f==="all"||f==="player")&&norm(p.name+" "+p.club+" "+p.pos).includes(q))out.push(`<div class="card"><h3>${p.flag} ${p.name}</h3><p>${p.pos} • ${p.age} лет • ${p.club}</p><b>OVR ${p.ovr} • POT ${p.pot}</b></div>`)});
+ players.forEach(p=>{if((f==="all"||f==="player")&&norm(p.name+" "+p.club+" "+p.pos).includes(q))out.push(`<div class="card"><h3>${p.flag||"⚽"} ${p.name}</h3><p>${p.pos} • ${p.age} лет • ${p.club}</p><b>OVR ${p.ovr} • POT ${p.pot}</b></div>`)});
+ COUNTRIES.forEach(c=>{if((f==="all"||f==="country")&&norm(c[0]+" "+c[1]).includes(q))out.push(`<div class="card"><h3>${c[0]} ${c[1]}</h3><p>${c[2]}</p><p class="small">Кубок: ${c[3]}</p></div>`);if((f==="all"||f==="league")&&norm(c[2]+" "+c[3]).includes(q))out.push(`<div class="card"><h3>${c[0]} ${c[2]}</h3><p>Кубок: ${c[3]}</p></div>`)})
+ document.getElementById("worldResults").innerHTML=out.length?out.slice(0,60).join(""):'<div class="notice">Ничего не найдено. Попробуй другое название.</div>'
+}
+function globalSearch(q){
+ q=norm(q); let box=document.getElementById("globalSearchResults"); if(!q){box.classList.remove("show");box.innerHTML="";return}
+ let hits=[];
+ const add=(type,name,sub,action)=>{if(hits.length<10)hits.push(`<div class="searchResult" onclick='${action}'><b>${name}</b><span>${type} • ${sub}</span></div>`)};
+ CLUBS.forEach(c=>{if(norm(c.join(" ")).includes(q))add("Клуб",c[0],c[1],`go("squads");document.getElementById("squadSearch").value=${JSON.stringify(c[0])};renderSquads();closeGlobalSearch()`)});
+ [...REAL_PLAYERS_MORE,...realPlayers.map(p=>[p.name,p.pos,p.ovr,p.pot,p.age,p.club,p.flag]),...players.map(p=>[p.name,p.pos,p.ovr,p.pot,p.age,p.club,p.flag])].forEach(p=>{if(norm(p.join(" ")).includes(q))add("Игрок",p[0],`${p[1]} • ${p[5]}`,`openPlayer(${JSON.stringify(p[0])});closeGlobalSearch()`)});
+ COUNTRIES.forEach(c=>{if(norm(c.join(" ")).includes(q))add("Страна/лига",c[1],`${c[2]} • ${c[3]}`,`go("world");document.getElementById("worldSearch").value=${JSON.stringify(c[1])};searchWorld();closeGlobalSearch()`)});
+ box.innerHTML=hits.join("")||'<div class="searchResult"><span>Ничего не найдено</span></div>';box.classList.add("show");
+}
+function closeGlobalSearch(){document.getElementById("globalSearchResults").classList.remove("show")}
+function renderSquads(){
+ let q=(document.getElementById("squadSearch").value||"").toLowerCase();
+ let clubs=CLUBS.filter(c=>c[0].toLowerCase().includes(q));
+ document.getElementById("squadResults").innerHTML=clubs.map(c=>{let ps=REAL_PLAYERS_MORE.filter(p=>p[5]===c[0]);if(!ps.length)ps=realPlayers.filter(p=>p.club===c[0]).map(p=>[p.name,p.pos,p.ovr,p.pot,p.age,p.club,p.flag]);return `<div class="card"><h2><img class="logoImg" src="${c[2]}" onerror="this.style.display='none'"> ${c[0]}</h2><table class="dataTable"><tr><th>Игрок</th><th>Поз.</th><th>OVR</th><th>Возраст</th></tr>${ps.map(p=>`<tr><td>${p[6]} ${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td><td>${p[4]}</td></tr>`).join("")||'<tr><td colspan="4">Детальный состав пока загружается в следующей базе данных.</td></tr>'}</table></div>`}).join("")||'<div class="notice">Клуб не найден.</div>'
+}
+function renderCompetitions(){let el=document.getElementById("competitionList");if(!el)return;el.innerHTML=COUNTRIES.map(c=>`<div class="card"><h3>${c[0]} ${c[2]}</h3><p>Национальный кубок: <b>${c[3]}</b></p></div>`).join("")}
+function renderStats(){
+ let top=[...REAL_PLAYERS_MORE].sort((a,b)=>b[2]-a[2]);
+ document.getElementById("topScorer").textContent=top[0]?.[0]||"—";document.getElementById("topAssist").textContent=top[1]?.[0]||"—";
+ document.getElementById("goldenShoe").textContent=top[2]?.[0]||"—";document.getElementById("ballon").textContent=top[0]?.[0]||"—";document.getElementById("uefaAward").textContent=top[1]?.[0]||"—";document.getElementById("bestKeeper").textContent=top.find(p=>p[1]==="GK")?.[0]||"—";
+ document.getElementById("leagueLeaders").innerHTML=COMPETITIONS.slice(0,9).map(c=>`<div class="news"><b>${c[0]} ${c[1]}</b><span style="margin-left:auto">Бомбардир: ${top[(c[1].length)%top.length][0]} • Ассистент: ${top[(c[1].length+3)%top.length][0]}</span></div>`).join("")
+}
+
+function resetGame(){if(confirm("Сбросить весь прогресс?")){localStorage.clear();location.reload()}}
+document.getElementById("search").oninput=e=>globalSearch(e.target.value);
+document.addEventListener("click",e=>{if(!e.target.closest(".top")&&!e.target.closest("#globalSearchResults"))closeGlobalSearch()});
+repairEconomy();
+if(!state.activeCareer){setTimeout(()=>showNewCareer(),250)}
+save(); render(); renderCareerList(); renderCompetitions(); renderStats(); searchWorld(); renderSquads();
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&document.activeElement?.id==="worldSearch")searchWorld()});
+</script>
+
+<div id="newCareerPanel" class="modal" style="display:none"><div class="modalBox">
+<h2>🚀 Новая карьера</h2><input id="careerNameInput" class="input" placeholder="Название карьеры" value="Моя карьера">
+<h3>🎚️ Сложность</h3><div class="difficulty">
+<div class="choice" data-diff="Очень легко" onclick="pickDifficulty(this)">🟢<br><b>Очень легко</b><p>Большой бюджет, быстрый прогресс.</p></div>
+<div class="choice" data-diff="Легко" onclick="pickDifficulty(this)">🟢<br><b>Легко</b><p>Больше денег и мягкая экономика.</p></div>
+<div class="choice" data-diff="Нормальная" onclick="pickDifficulty(this)">🟡<br><b>Нормальная</b><p>Сбалансированная карьера.</p></div>
+<div class="choice" data-diff="Сложно" onclick="pickDifficulty(this)">🟠<br><b>Сложно</b><p>Меньше ресурсов, жёсткий рынок.</p></div>
+<div class="choice" data-diff="Хардкор" onclick="pickDifficulty(this)">🔴<br><b>Хардкор</b><p>Очень ограниченные ресурсы.</p></div>
+</div>
+<h3>🏟️ Выбери команду</h3><div id="teamChoices" class="teamPick"></div>
+<div style="margin-top:15px;display:flex;gap:8px"><button class="btn" onclick="createCareer()">Начать карьеру</button><button class="btn gray" onclick="if(state.activeCareer)closeNewCareer()">Отмена</button></div>
+</div></div>
+</body></html>
