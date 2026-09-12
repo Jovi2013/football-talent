@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#061326">
+<title>Football Talent — Scout & Career</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#020a17;color:#eef6ff;font-family:Arial,Helvetica,sans-serif}
+button{font:inherit;color:inherit}.app{display:flex;min-height:100vh;background:radial-gradient(circle at 50% 0,#0c2340 0,#03101f 42%,#010711 100%)}
+.side{width:215px;background:rgba(3,16,31,.96);border-right:1px solid #17365c;padding:16px 10px;position:fixed;inset:0 auto 0 0;z-index:4}
+.logo{display:flex;gap:10px;align-items:center;padding:4px 8px 18px}.ball{font-size:39px}.logo b{font-size:25px}.logo small{display:block;color:#8296b2;margin-top:3px}
+.nav button{width:100%;border:0;background:none;padding:12px 14px;text-align:left;border-radius:11px;margin:2px 0;cursor:pointer;color:#b9c8dc}.nav button:hover,.nav button.active{background:linear-gradient(90deg,#0c55bd,#0d2e62);color:white;box-shadow:0 0 18px #0878ff33}.nav span{margin-right:11px}
+.main{margin-left:215px;width:calc(100% - 215px);padding:16px 18px 24px}.top{height:57px;display:flex;align-items:center;gap:18px;margin-bottom:12px}.search{flex:1;max-width:500px;background:#071a31;border:1px solid #24517d;border-radius:25px;padding:12px 18px;color:#9fb1c8}.topstats{margin-left:auto;display:flex;gap:25px;align-items:center}.money{font-weight:bold}.green{color:#37e77d}.icon{font-size:23px}
+.grid{display:grid;grid-template-columns:minmax(500px,1.65fr) minmax(260px,.75fr) minmax(260px,.8fr);gap:12px}.card{background:linear-gradient(145deg,#071a31,#041121);border:1px solid #153b64;border-radius:14px;box-shadow:0 0 20px #001b3a55;overflow:hidden}.pad{padding:15px}.hero{min-height:250px;padding:28px;display:flex;align-items:center;background:linear-gradient(90deg,#06162b99,#06162b33),url("https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1200&q=80") center/cover}.hero h1{font-size:35px;max-width:560px;margin:0 0 10px}.hero p{color:#b8c7da}.primary{background:linear-gradient(90deg,#0877ff,#0b4fc4);border:0;border-radius:10px;padding:12px 18px;font-weight:bold;cursor:pointer}.section-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}.section-title h2{font-size:18px;margin:0}.muted{color:#8295ad;font-size:13px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.stat{padding:16px;border-radius:12px;background:#06182d;border:1px solid #15395f}.stat .big{font-size:25px;font-weight:bold;margin-top:6px}.players{grid-column:1/3}.playergrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.player{min-height:210px;border:1px solid #16436e;border-radius:12px;background:linear-gradient(#071d37,#031020);padding:10px;position:relative}.rating{font-size:23px;color:#69f35e;font-weight:bold}.pos{font-size:11px;color:#65e76d}.avatar{height:92px;border-radius:9px;margin:7px 0;background:radial-gradient(circle at 50% 20%,#b9c8d8 0 10%,#273b50 11% 28%,#0b1829 29% 100%);display:flex;align-items:end;justify-content:center;font-size:50px}.pname{font-weight:bold;font-size:13px}.value{margin-top:5px;color:#dce8f7;font-size:13px}.bar{height:6px;background:#102b46;border-radius:9px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#24e16e,#76ff55);width:75%}
+.news img{width:62px;height:55px;object-fit:cover;border-radius:7px}.newsitem{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #16314f}.newsitem:last-child{border:0}.fixture{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #16314f}.team{font-weight:bold}.logoTeam{font-size:28px}.bottom{display:grid;grid-template-columns:1.2fr .9fr .8fr;gap:12px;margin-top:12px}.map{height:175px;background:radial-gradient(circle at 40% 45%,#0a6547,#061d2e 45%,#041222 75%);border-radius:10px;position:relative;overflow:hidden}.map:after{content:"";position:absolute;inset:25px;border:1px solid #3ed48b44;border-radius:50%}.prospect{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #17304b}.tag{background:#134f37;color:#80f09b;padding:4px 8px;border-radius:10px;font-size:11px}.tabs{display:flex;gap:7px;margin-bottom:10px}.tabs button{border:1px solid #21466d;background:#071a31;border-radius:18px;padding:7px 12px;color:#9fb2ca}.tabs button.active{background:#0b63dc;color:white}.page{display:none}.page.active{display:block}.table{width:100%;border-collapse:collapse}.table td{padding:8px;border-bottom:1px solid #15304b}.event{padding:9px 0;border-bottom:1px solid #15304b}.mobilebar{display:none}
+@media(max-width:1100px){.grid{grid-template-columns:1fr 1fr}.players{grid-column:1/-1}.bottom{grid-template-columns:1fr 1fr}.playergrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.side{display:none}.main{margin:0;width:100%;padding:10px 8px 72px}.top{gap:8px}.search{display:none}.topstats{gap:10px;font-size:12px}.grid,.bottom{display:block}.card{margin-bottom:10px}.hero{min-height:220px;padding:20px}.hero h1{font-size:27px}.stats{grid-template-columns:1fr 1fr}.playergrid{grid-template-columns:1fr 1fr}.mobilebar{display:flex;position:fixed;bottom:0;left:0;right:0;height:62px;background:#041327ee;border-top:1px solid #1b4269;z-index:5;justify-content:space-around}.mobilebar button{border:0;background:none;color:#b9c8dc;font-size:11px}.mobilebar span{display:block;font-size:19px}.topstats .hideMob{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+<div class="logo"><div class="ball">⚽</div><div><b>Football Talent</b><small>Scout • Build • Develop</small></div></div>
+<nav class="nav">
+<button class="active" onclick="show('home',this)">🏠 <span>Главная</span></button>
+<button onclick="show('scout',this)">🔎 <span>Скаутинг</span></button>
+<button onclick="show('players',this)">👥 <span>Игроки</span></button>
+<button onclick="show('career',this)">🏆 <span>Карьера</span></button>
+<button onclick="show('clubs',this)">🛡️ <span>Клубы</span></button>
+<button onclick="show('transfers',this)">↔️ <span>Трансферы</span></button>
+<button onclick="show('training',this)">🏋️ <span>Тренировки</span></button>
+<button onclick="show('matches',this)">⚽ <span>Матчи</span></button>
+<button onclick="show('finance',this)">📊 <span>Финансы</span></button>
+<button onclick="show('ach',this)">🏅 <span>Достижения</span></button>
+<button onclick="show('settings',this)">⚙️ <span>Настройки</span></button>
+</nav>
+</aside>
+<main class="main">
+<header class="top"><div class="search">🔍 &nbsp; Поиск игроков, клубов, стран...</div><div class="topstats"><span class="hideMob">🌐</span><span>📅 12 Июл 2025</span><span class="money">€ <b id="money">100,000</b><br><small class="green">+ € 10,000 / мес</small></span><span class="icon">✉️</span><span class="icon">🔔</span><span class="icon">⚙️</span></div></header>
+
+<section id="home" class="page active">
+<div class="grid">
+<div class="card hero"><div><h1>Начни свой путь<br>в большом футболе!</h1><p>Скауты, тренировки, трансферы, турниры и многое другое.<br>Создай свою футбольную историю.</p><button class="primary" onclick="show('scout')">🔎 Перейти к скаутингу →</button></div></div>
+<div class="card pad"><div class="section-title"><h2>Следующий матч</h2></div><div style="text-align:center;padding:8px"><div class="logoTeam">👑　 VS　 🟥</div><h3>Real Madrid　—　Barcelona</h3><p class="muted">La Liga 2025/26<br>13.07.2025 · 22:00</p><button class="primary" onclick="alert('Демо: матч будет доступен после запуска сезона.')">▶ Просмотр матча</button></div></div>
+<div class="card pad news"><div class="section-title"><h2>Новости</h2><span class="muted">Все новости →</span></div>
+<div class="newsitem"><div class="avatar" style="width:62px;height:55px;margin:0">👤</div><div><b>Мбаппе готов к новому сезону</b><br><small class="muted">12.07.2025 · 10:24</small></div></div>
+<div class="newsitem"><div class="avatar" style="width:62px;height:55px;margin:0">🧑</div><div><b>Арда Гюлер получил новый номер</b><br><small class="muted">11.07.2025 · 16:45</small></div></div>
+<div class="newsitem"><div class="avatar" style="width:62px;height:55px;margin:0">⭐</div><div><b>Найден новый молодой талант</b><br><small class="muted">10.07.2025 · 12:17</small></div></div></div>
+</div>
+<div class="stats">
+<div class="stat">💼 Бюджет<div class="big">€ <span id="budget">100,000</span></div><small class="green">+ €10,000 / мес</small></div>
+<div class="stat">↔️ Трансферный бюджет<div class="big">€ <span id="transfer">80,000</span></div><small class="green">Лимит расходов</small></div>
+<div class="stat">🔎 Скаутинг<div class="big">€ <span id="scoutBudget">5,000</span></div><small class="muted">Доступно</small></div>
+<div class="stat">🛡️ Репутация<div class="big">57 <span class="green">↑2</span></div><div class="bar"><i style="width:57%"></i></div></div>
+</div>
+<div class="card pad players"><div class="section-title"><h2>⭐ Моя команда</h2><span class="muted">Смотреть всю команду →</span></div><div class="tabs"><button class="active">Основной состав</button><button>Резерв</button><button>Молодёжка</button></div><div class="playergrid" id="topPlayers"></div></div>
+<div class="bottom">
+<div class="card pad"><div class="section-title"><h2>🔎 Скаутинг</h2><span class="muted">Все отчёты →</span></div><div class="map"></div><p><b>Активные скауты: 3</b></p><div class="prospect"><span>🇩🇪 Jamal Musiala<br><small class="muted">Потенциал: 93–96</small></span><span class="tag">Очень высоко</span></div><div class="prospect"><span>🇧🇷 Endrick<br><small class="muted">Потенциал: 90–94</small></span><span class="tag">Высоко</span></div><div class="prospect"><span>🇪🇸 Lamine Yamal<br><small class="muted">Потенциал: 88–92</small></span><span class="tag">Высоко</span></div></div>
+<div class="card pad"><div class="section-title"><h2>🏆 Таблица Ла Лиги</h2><span class="muted">Все таблицы →</span></div><table class="table"><tr><td>1</td><td>👑 Real Madrid</td><td>0</td><td>0</td></tr><tr><td>2</td><td>🟥 Barcelona</td><td>0</td><td>0</td></tr><tr><td>3</td><td>🔴 Atlético</td><td>0</td><td>0</td></tr><tr><td>4</td><td>⚪ Athletic Club</td><td>0</td><td>0</td></tr><tr><td>5</td><td>🟡 Villarreal</td><td>0</td><td>0</td></tr></table></div>
+<div class="card pad"><div class="section-title"><h2>🔔 События</h2><span class="muted">Все события →</span></div><div class="event">⭐ Новый талант<br><small class="muted">16-летний игрок найден в Бразилии</small></div><div class="event">💚 Успешный скаутинг<br><small class="muted">Найден перспективный игрок</small></div><div class="event">🏁 Новый сезон<br><small class="muted">Сезон 2025/26 начался</small></div></div>
+</div>
+</section>
+
+<section id="scout" class="page"><div class="card pad"><h2>🔎 Скаутинг</h2><p class="muted">Ищи молодых игроков. Чем лучше отчёт, тем точнее диапазон потенциала.</p><div class="stats"><div class="stat">🌍 Страна<select id="country"><option>Бразилия</option><option>Испания</option><option>Германия</option><option>Англия</option><option>Франция</option><option>Азербайджан</option></select></div><div class="stat">⚽ Позиция<select id="position"><option>Любая</option><option>ST</option><option>RW</option><option>CM</option><option>CB</option><option>GK</option></select></div><div class="stat">🎯 Тип<div class="big">Wonderkid</div></div><div class="stat">💰 Цена отчёта<div class="big">€5,000</div></div></div><button class="primary" onclick="scout()">🔎 Отправить скаута</button><div id="scoutResult" style="margin-top:15px"></div></div></section>
+
+<section id="players" class="page"><div class="card pad"><h2>👥 Игроки</h2><p class="muted">Твои игроки и найденные таланты.</p><div class="playergrid" id="allPlayers"></div></div></section>
+<section id="career" class="page"><div class="card pad"><h2>🏆 Карьера агентства</h2><div class="stats"><div class="stat">Уровень<div class="big">1</div></div><div class="stat">Репутация<div class="big">57</div></div><div class="stat">Найдено талантов<div class="big" id="found">0</div></div><div class="stat">Следующий уровень<div class="big">100 REP</div></div></div><h3>Уровни</h3><p>1 — Начинающий → 2 — Скаут → 3 — Агентство → 4 — Большая компания → 5 — Футбольная империя</p></div></section>
+<section id="clubs" class="page"><div class="card pad"><h2>🛡️ Клубы</h2><p>Real Madrid · Barcelona · Manchester City · Arsenal · Bayern · PSG · Juventus · Qarabağ</p></div></section>
+<section id="transfers" class="page"><div class="card pad"><h2>↔️ Трансферный рынок</h2><p class="muted">Стоимость теперь зависит от возраста, рейтинга, потенциала, формы и спроса — случайных огромных скачков быть не должно.</p><div id="market"></div></div></section>
+<section id="training" class="page"><div class="card pad"><h2>🏋️ Тренировки</h2><p>Выбирай игрока и направление развития.</p><button class="primary" onclick="train()">+ Провести тренировку (€10,000)</button><div id="trainingResult" style="margin-top:14px"></div></div></section>
+<section id="matches" class="page"><div class="card pad"><h2>⚽ Матчи</h2><div class="fixture"><span>👑 Real Madrid</span><b>VS</b><span>🟥 Barcelona</span></div><div class="fixture"><span>🔴 AC Milan</span><b>VS</b><span>👑 Real Madrid</span></div><div class="fixture"><span>🔵 Man City</span><b>VS</b><span>👑 Real Madrid</span></div></div></section>
+<section id="finance" class="page"><div class="card pad"><h2>📊 Финансы</h2><div class="stats"><div class="stat">Баланс<div class="big">€ <span id="financeMoney">100,000</span></div></div><div class="stat">Доход/месяц<div class="big green">€10,000</div></div><div class="stat">Расходы<div class="big">€0</div></div><div class="stat">Чистая прибыль<div class="big green">€10,000</div></div></div></div></section>
+<section id="ach" class="page"><div class="card pad"><h2>🏅 Достижения</h2><div class="prospect">🔎 Первый скаутинг <span class="tag">Открыто</span></div><div class="prospect">⭐ Найти Wonderkid <span class="tag">Открыто</span></div><div class="prospect">💰 Продать игрока за €1M <span class="tag">Закрыто</span></div><div class="prospect">👑 Построить футбольную империю <span class="tag">Закрыто</span></div></div></section>
+<section id="settings" class="page"><div class="card pad"><h2>⚙️ Настройки</h2><button class="primary" onclick="resetGame()">Сбросить сохранение</button><p class="muted">Прогресс сохраняется в браузере автоматически.</p></div></section>
+<footer style="padding:18px 5px;color:#667e9d">⚽ Football Talent v0.4 · Текущий сезон 2025/26 · Игра сохранена локально</footer>
+</main>
+</div>
+<div class="mobilebar"><button onclick="show('home')"><span>🏠</span>Главная</button><button onclick="show('scout')"><span>🔎</span>Скаутинг</button><button onclick="show('players')"><span>👥</span>Игроки</button><button onclick="show('transfers')"><span>↔️</span>Рынок</button><button onclick="show('career')"><span>🏆</span>Карьера</button></div>
+<script>
+const names=[['Kylian Mbappé','ST','91','180,000,000','🇫🇷'],['Jude Bellingham','CAM','89','150,000,000','🇬🇧'],['Rodrygo','RW','87','100,000,000','🇧🇷'],['Pedri','CM','86','90,000,000','🇪🇸'],['Antonio Rüdiger','CB','85','60,000,000','🇩🇪'],['Nuno Mendes','LB','84','70,000,000','🇵🇹']];
+let state=JSON.parse(localStorage.getItem('ft_state')||'null')||{money:100000,found:0,players:[]};
+function moneyFmt(n){return Math.max(0,Math.round(n)).toLocaleString('en-US')}
+function renderPlayers(){
+ const html=names.slice(0,6).map((p,i)=>`<div class="player"><div><span class="rating">${p[2]}</span> <span class="pos">${p[1]}</span></div><div class="avatar">⚽</div><div class="pname">${p[0]} ${p[4]}</div><div class="muted">Возраст: ${i+19}</div><div class="value">€ ${p[3]}</div><div class="bar"><i style="width:${70+i*4}%"></i></div></div>`).join('');
+ document.querySelector('#topPlayers').innerHTML=html;document.querySelector('#allPlayers').innerHTML=html;
+}
+function render(){document.querySelectorAll('#money,#budget,#financeMoney').forEach(x=>x.textContent=moneyFmt(state.money));document.querySelector('#found').textContent=state.found;renderPlayers();localStorage.setItem('ft_state',JSON.stringify(state))}
+function show(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');window.scrollTo(0,0)}
+function scout(){
+ if(state.money<5000){alert('Недостаточно денег на скаутинг');return}
+ state.money-=5000;state.found++;
+ const country=document.querySelector('#country').value,pos=document.querySelector('#position').value;
+ const age=15+Math.floor(Math.random()*5),rating=55+Math.floor(Math.random()*18),pot=78+Math.floor(Math.random()*19);
+ const price=Math.round((age<18?50000:120000)*(rating/60)*(pot/80));
+ document.querySelector('#scoutResult').innerHTML=`<div class="card pad"><h3>⭐ Новый талант найден!</h3><p>🌍 ${country} · ⚽ ${pos}</p><p><b>${age} лет</b> · Рейтинг <b>${rating}</b> · Потенциал <b>${pot}–${Math.min(99,pot+5)}</b></p><p>Оценочная стоимость: <b>€${moneyFmt(price)}</b></p><button class="primary" onclick="signPlayer(${price},${rating},${pot})">Подписать за €${moneyFmt(price)}</button></div>`;render()}
+function signPlayer(price,rating,pot){if(state.money<price){alert('Не хватает бюджета');return}state.money-=price;state.players.push({rating,pot,price});document.querySelector('#scoutResult').innerHTML='<div class="card pad">✅ Игрок подписан! Теперь его можно развивать и продавать.</div>';render()}
+function train(){if(state.money<10000){alert('Недостаточно денег');return}if(!state.players.length){alert('Сначала подпиши игрока через скаутинг');return}state.money-=10000;let p=state.players[Math.floor(Math.random()*state.players.length)];p.rating=Math.min(99,p.rating+1);document.querySelector('#trainingResult').textContent=`Тренировка завершена. Рейтинг одного из твоих игроков вырос до ${p.rating}.`;render()}
+function resetGame(){if(confirm('Сбросить прогресс?')){localStorage.removeItem('ft_state');location.reload()}}
+render();
+</script>
+</body></html>
