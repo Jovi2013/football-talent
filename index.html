@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Football Talent — Scout & Career</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2e;--panel2:#12243b;--text:#f5f7fb;--muted:#9fb0c5;--accent:#5ee6a8;--accent2:#59a9ff;--danger:#ff6b7a;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0%,#14304b 0,#07111f 38%,#050b14 100%);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:22px 18px 10px;max-width:1200px;margin:auto}h1{margin:0;font-size:28px}header p{color:var(--muted);margin:5px 0 0}
+nav{position:sticky;top:0;z-index:5;background:#07111fe8;backdrop-filter:blur(10px);border-bottom:1px solid #ffffff10;padding:10px;display:flex;gap:8px;overflow:auto}
+nav button,.btn{border:1px solid #ffffff14;background:var(--panel);color:var(--text);border-radius:12px;padding:10px 13px;cursor:pointer}nav button.active,.btn.primary{background:var(--accent);color:#06120d;border-color:transparent;font-weight:800}
+main{max-width:1200px;margin:18px auto;padding:0 14px}.page{display:none}.page.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}.card{background:linear-gradient(145deg,#10243a,#0b1728);border:1px solid #ffffff10;border-radius:18px;padding:17px;box-shadow:0 12px 30px #0004}
+.hero{padding:26px;display:flex;justify-content:space-between;gap:20px;align-items:center}.hero .ball{font-size:70px}.muted{color:var(--muted)}.big{font-size:34px;font-weight:900}.score{font-size:25px;font-weight:900;color:var(--accent)}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{padding:5px 8px;border-radius:999px;background:#ffffff0d;color:#c8d5e5;font-size:12px}
+.stat{margin:10px 0}.statline{height:8px;background:#ffffff0b;border-radius:99px;overflow:hidden}.statline i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:99px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #ffffff0b}th{color:var(--muted);font-size:12px}
+.player{cursor:pointer}.player:hover{transform:translateY(-2px);transition:.15s;border-color:#ffffff28}.avatar{width:58px;height:58px;border-radius:16px;background:linear-gradient(135deg,#244d73,#13243a);display:grid;place-items:center;font-size:27px}
+input,select{width:100%;padding:11px;border-radius:10px;border:1px solid #ffffff16;background:#07111f;color:var(--text);margin:5px 0 10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.notice{padding:12px;border-radius:12px;background:#ffffff08;margin:10px 0}.good{color:var(--accent)}.gold{color:var(--gold)}.danger{color:var(--danger)}
+canvas{width:100%;height:220px;background:#081321;border-radius:14px}
+footer{text-align:center;color:#65758a;padding:30px}
+@media(max-width:600px){.hero{flex-direction:column;align-items:flex-start}.big{font-size:28px}}
+</style>
+</head>
+<body>
+<header><h1>⚽ Football Talent</h1><p>Scout & Career — найди будущую суперзвезду</p></header>
+<nav id="nav"></nav>
+<main>
+<section id="dashboard" class="page active">
+ <div class="card hero"><div><div class="tags"><span class="tag">SEASON 2026/27</span><span class="tag">SCOUT ACADEMY</span></div><h2>Твоя скаутская карьера начинается здесь.</h2><p class="muted">Ищи игроков, раскрывай скрытый потенциал и строй футбольную империю.</p><button class="btn primary" onclick="go('scouting')">🔎 Начать скаутинг</button></div><div class="ball">⚽</div></div>
+ <div class="grid" style="margin-top:14px">
+  <div class="card"><div class="muted">Бюджет</div><div class="big" id="money">€100,000</div></div>
+  <div class="card"><div class="muted">Репутация</div><div class="big" id="rep">10</div></div>
+  <div class="card"><div class="muted">Найдено талантов</div><div class="big" id="found">0</div></div>
+  <div class="card"><div class="muted">Уровень агентства</div><div class="big" id="level">1</div></div>
+ </div>
+ <div class="card" style="margin-top:14px"><h3>📌 Событие дня</h3><div id="event">Новый игровой день. Отправляйся на скаутинг.</div></div>
+</section>
+
+<section id="scouting" class="page">
+ <div class="row"><div><h2>🔎 Скаутинг</h2><p class="muted">Каждый поиск создаёт уникального молодого игрока.</p></div><button class="btn primary" onclick="scout()">Найти игрока — €5,000</button></div>
+ <div id="scoutResult" style="margin-top:14px"></div>
+ <div class="card" style="margin-top:14px"><h3>Последние найденные</h3><div id="scoutList" class="grid"></div></div>
+</section>
+
+<section id="players" class="page">
+ <h2>👥 Мои игроки</h2><div id="playersList" class="grid"></div>
+</section>
+
+<section id="analysis" class="page">
+ <h2>📊 Анализатор</h2><p class="muted">Выбери игрока, чтобы увидеть подробный профиль.</p>
+ <div id="analysisBox"></div>
+</section>
+
+<section id="career" class="page">
+ <h2>🏆 Карьера</h2>
+ <div class="grid">
+  <div class="card"><h3>📈 Развитие агентства</h3><p>Репутация растёт, когда твои игроки прогрессируют и получают трансферы.</p><div class="notice">Следующий уровень: <b id="nextLevel">50</b> репутации</div></div>
+  <div class="card"><h3>🗓️ Следующий сезон</h3><p>Переход сезона обновит возраст, форму и статистику игроков.</p><button class="btn primary" onclick="nextSeason()">▶ Завершить сезон</button></div>
+ </div>
+ <div class="card" style="margin-top:14px"><h3>📜 История</h3><div id="history"></div></div>
+</section>
+
+<section id="transfers" class="page">
+ <h2>💰 Трансферный рынок</h2><p class="muted">Развивай игроков и продавай их клубам.</p><div id="transferList" class="grid"></div>
+</section>
+</main><footer>Football Talent — prototype 0.2 • Все игроки в демо вымышлены</footer>
+
+<script>
+const positions=['GK','CB','LB','RB','CDM','CM','CAM','LW','RW','ST'];
+const names=['Alex','Mateo','Luka','Noah','Daniel','Leo','Milan','Ethan','Santiago','Arman','Rayan','Niko','Yusuf','Kenan','Emil','Adrian','Marco','David','Omar','Enzo'];
+const countries=['🇪🇸','🇧🇷','🇦🇷','🇵🇹','🇫🇷','🇩🇪','🇮🇹','🇳🇱','🇦🇿','🇹🇷','🇭🇷','🇬🇧'];
+
+const SAVE_KEY='ft_state_v02';
+let state=JSON.parse(localStorage.getItem(SAVE_KEY)||'null')||{
+  money:100000,rep:10,found:0,level:1,season:2026,players:[],history:[]
+};
+
+function save(){localStorage.setItem(SAVE_KEY,JSON.stringify(state));render()}
+function fmt(n){return '€'+Math.max(0,Math.round(n)).toLocaleString('en-US')}
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+
+function calcPotential(p){
+  let ageBonus=Math.max(0,20-p.age)*2.2;
+  let skill=(p.speed+p.shooting+p.passing+p.dribbling+p.defense+p.physical+p.decisions)/7;
+  let growth=rnd(-3,4);
+  return Math.max(55,Math.min(99,Math.round(skill+ageBonus+growth)));
+}
+
+/* Youth-market valuation:
+   - rating matters strongly;
+   - potential gives a premium, but not millions by itself;
+   - age increases value gradually;
+   - training no longer multiplies value by 4% every click.
+*/
+function ageMultiplier(age){
+  if(age<=15)return 0.75;
+  if(age===16)return 0.90;
+  if(age===17)return 1.10;
+  if(age===18)return 1.35;
+  if(age===19)return 1.65;
+  if(age===20)return 1.90;
+  if(age===21)return 2.20;
+  if(age===22)return 2.50;
+  if(age===23)return 2.80;
+  return 3.10;
+}
+function marketValue(p){
+  const ratingPart=12000*Math.pow(1.10,Math.max(0,p.rating-50));
+  const potentialPart=7000*Math.pow(1.08,Math.max(0,p.potential-60));
+  const developmentPremium=1+Math.min(0.12,(p.trainingCount||0)*0.008);
+  return Math.max(15000,Math.round((ratingPart+potentialPart)*ageMultiplier(p.age)*developmentPremium));
+}
+function trainingCost(p){
+  const n=p.trainingCount||0;
+  return Math.round((1800 + p.rating*65) * (1+n*0.12));
+}
+function createPlayer(){
+  let age=rnd(15,20);
+  let p={
+    id:Date.now()+Math.random(),
+    name:names[rnd(0,names.length-1)]+' '+['Silva','Mendes','Costa','Rossi','Garcia','Aliyev','Kovacs','Martin'][rnd(0,7)],
+    age,pos:positions[rnd(0,9)],country:countries[rnd(0,countries.length-1)],
+    speed:rnd(45,88),shooting:rnd(35,84),passing:rnd(40,88),dribbling:rnd(40,91),
+    defense:rnd(25,82),physical:rnd(40,84),decisions:rnd(35,86),form:rnd(55,85),
+    matches:0,goals:0,assists:0,trainingCount:0
+  };
+  p.rating=Math.round((p.speed+p.shooting+p.passing+p.dribbling+p.defense+p.physical+p.decisions)/7);
+  p.potential=calcPotential(p);
+  p.value=marketValue(p);
+  return p;
+}
+function scout(){
+  const cost=5000;
+  if(state.money<cost){alert('Недостаточно бюджета. Нужно '+fmt(cost)+' на скаутский отчёт.');return}
+  state.money-=cost;
+  let p=createPlayer();
+  state.players.push(p);state.found++;
+  let verdict=p.potential>=92?'🔥 Скрытый топ-талант':p.potential>=85?'⭐ Большой талант':p.potential>=75?'🟢 Перспективный':'⚪ Обычный';
+  document.getElementById('scoutResult').innerHTML=cardHTML(p,true)+`<div class="notice">${verdict}. Предварительный потенциал: <b>${p.potential}</b>/100. Рыночная оценка: <b>${fmt(p.value)}</b>.</div>`;
+  state.history.unshift(`Сезон ${state.season}/${String(state.season+1).slice(2)}: найден ${p.name}, ${p.age} лет, ${p.potential} POT за ${fmt(cost)}.`);
+  save();
+}
+function cardHTML(p,actions=false){
+  return `<div class="card player" onclick="openPlayer(${p.id})"><div class="row"><div class="row"><div class="avatar">⚽</div><div><b>${p.name}</b><div class="muted">${p.country} • ${p.age} лет • ${p.pos}</div></div></div><div class="score">${p.rating}</div></div><div class="tags" style="margin-top:12px"><span class="tag">POT ${p.potential}</span><span class="tag">${fmt(p.value)}</span></div></div>`
+}
+function openPlayer(id){let p=state.players.find(x=>x.id==id);if(!p)return;go('analysis');renderAnalysis(p)}
+function renderAnalysis(p){
+  let stats=[['Скорость',p.speed],['Удар',p.shooting],['Пас',p.passing],['Дриблинг',p.dribbling],['Защита',p.defense],['Физика',p.physical],['Решения',p.decisions]];
+  let strengths=stats.slice().sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]).join(', ');
+  let weak=stats.slice().sort((a,b)=>a[1]-b[1]).slice(0,2).map(x=>x[0]).join(', ');
+  const cost=trainingCost(p);
+  const remaining=Math.max(0,15-(p.trainingCount||0));
+  document.getElementById('analysisBox').innerHTML=`<div class="card">
+    <div class="row"><div><h2>${p.name} ${p.country}</h2><p class="muted">${p.age} лет • ${p.pos} • рыночная оценка ${fmt(p.value)}</p></div><div class="score">${p.rating}</div></div>
+    <div class="notice">🧠 <b>Скаутский вывод:</b> ${p.potential>=92?'Исключительный талант. Нужен план развития и игровое время.':p.potential>=85?'Высокий потенциал. Игрок заслуживает долгосрочного проекта.':'Перспектива есть, но потребуется стабильное развитие.'}</div>
+    <h3>Навыки</h3>${stats.map(s=>`<div class="stat"><div class="row"><span>${s[0]}</span><b>${s[1]}</b></div><div class="statline"><i style="width:${s[1]}%"></i></div></div>`).join('')}
+    <div class="grid">
+      <div class="notice">💪 Сильные стороны<br><b>${strengths}</b></div>
+      <div class="notice">🔧 Развивать<br><b>${weak}</b></div>
+      <div class="notice">🚀 Потенциал<br><span class="score">${p.potential}/100</span></div>
+    </div>
+    <div class="notice">🏋️ Тренировок в сезоне: <b>${p.trainingCount||0}/15</b>. Стоимость следующей: <b>${fmt(cost)}</b>. Цена растёт по мере интенсивности развития.</div>
+    <div class="actions">
+      <button class="btn primary" onclick="train(${p.id})">🏋️ Тренировка — ${fmt(cost)}</button>
+      <button class="btn" onclick="sell(${p.id})">💰 Выставить на рынок</button>
+    </div>
+    ${remaining===0?'<div class="notice danger">Лимит тренировок на этот сезон достигнут. Заверши сезон, чтобы продолжить развитие.</div>':''}
+  </div>`;
+}
+function train(id){
+  let p=state.players.find(x=>x.id==id);if(!p)return;
+  if((p.trainingCount||0)>=15){alert('На одного игрока максимум 15 тренировок за сезон.');return}
+  const cost=trainingCost(p);
+  if(state.money<cost){alert('Недостаточно бюджета. Нужно '+fmt(cost)+'.');return}
+  state.money-=cost;
+  let key=['speed','shooting','passing','dribbling','defense','physical','decisions'][rnd(0,6)];
+  p[key]=Math.min(99,p[key]+rnd(1,3));
+  p.rating=Math.round((p.speed+p.shooting+p.passing+p.dribbling+p.defense+p.physical+p.decisions)/7);
+  p.potential=Math.max(p.potential,calcPotential(p));
+  p.trainingCount=(p.trainingCount||0)+1;
+  p.value=marketValue(p);
+  state.history.unshift(`${p.name}: тренировка ${p.trainingCount}/15, -${fmt(cost)}. Оценка игрока: ${fmt(p.value)}.`);
+  renderAnalysis(p);save();
+}
+function sell(id){
+  let p=state.players.find(x=>x.id==id);if(!p)return;
+  /* Clubs negotiate around the modelled market value, not an arbitrary multiplier. */
+  const negotiation=(0.90+Math.random()*0.20);
+  const reputationBonus=1+Math.min(0.10,state.rep/1000);
+  const price=Math.round(p.value*negotiation*reputationBonus);
+  state.money+=price;
+  const repGain=p.potential>=90?12:p.potential>=80?8:5;
+  state.rep+=repGain;
+  state.players=state.players.filter(x=>x.id!=id);
+  state.history.unshift(`${p.name} продан за ${fmt(price)} (оценка ${fmt(p.value)}). Репутация +${repGain}.`);
+  save();go('transfers');
+}
+function nextSeason(){
+  state.season++;
+  state.money+=25000+state.rep*200;
+  state.players.forEach(p=>{
+    p.age++;
+    p.trainingCount=0;
+    p.matches+=rnd(10,35);
+    p.goals+=p.pos==='ST'?rnd(3,15):rnd(0,6);
+    p.assists+=rnd(1,10);
+    if(p.age<=23){
+      let k=['speed','shooting','passing','dribbling','defense','physical','decisions'][rnd(0,6)];
+      p[k]=Math.min(99,p[k]+rnd(0,2));
+    }
+    p.rating=Math.round((p.speed+p.shooting+p.passing+p.dribbling+p.defense+p.physical+p.decisions)/7);
+    p.value=marketValue(p);
+  });
+  state.rep+=Math.floor(state.players.length/3);
+  state.level=1+Math.floor(state.rep/50);
+  state.history.unshift(`Новый сезон ${state.season}/${String(state.season+1).slice(2)}. Агентство получило €${(25000+state.rep*200).toLocaleString('en-US')} сезонного дохода и лимиты тренировок обновлены.`);
+  save();
+}
+function render(){
+  document.getElementById('money').textContent=fmt(state.money);
+  document.getElementById('rep').textContent=state.rep;
+  document.getElementById('found').textContent=state.found;
+  document.getElementById('level').textContent=state.level;
+  document.getElementById('nextLevel').textContent=state.level*50;
+  document.getElementById('history').innerHTML=state.history.slice(0,12).map(x=>`<div class="notice">${x}</div>`).join('')||'<span class="muted">Пока пусто.</span>';
+  document.getElementById('playersList').innerHTML=state.players.map(p=>cardHTML(p)).join('')||'<div class="card"><b>Пока нет игроков.</b><p class="muted">Иди в скаутинг.</p></div>';
+  document.getElementById('scoutList').innerHTML=state.players.slice(-6).reverse().map(p=>cardHTML(p)).join('')||'<span class="muted">Найди первого игрока.</span>';
+  document.getElementById('transferList').innerHTML=state.players.map(p=>`<div>${cardHTML(p)}<button class="btn primary" style="margin-top:7px" onclick="sell(${p.id})">💰 Продать за ~${fmt(p.value)}</button></div>`).join('')||'<div class="card">Рынок пуст.</div>';
+}
+function go(id){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
+  render();
+}
+const pages=[['dashboard','🏠 Главная'],['scouting','🔎 Скаутинг'],['players','👥 Игроки'],['analysis','📊 Анализ'],['career','🏆 Карьера'],['transfers','💰 Рынок']];
+document.getElementById('nav').innerHTML=pages.map((p,i)=>`<button data-page="${p[0]}" class="${i===0?'active':''}" onclick="go('${p[0]}')">${p[1]}</button>`).join('');
+render();
+</script>
+</body></html>
